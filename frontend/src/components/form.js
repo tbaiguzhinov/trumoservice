@@ -6,7 +6,6 @@ export const Form = () => {
   const [lastName, setLastName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [idNumber, setIdNumber] = useState("");
-  const [img, setImg] = useState("");
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -21,14 +20,11 @@ export const Form = () => {
               Authorization: "Bearer " + localStorage.getItem("access_token"),
             },
           });
-          const url = "http://localhost:8000" + data.id_document;
-          setImg(url);
           setFirstName(data.first_name);
           setLastName(data.last_name);
           setDateOfBirth(data.date_of_birth);
           setIdNumber(data.id_number);
         } catch (e) {
-          console.log(errors);
           if (e.response.status === 401) {
             window.location.href = "/login";
           }

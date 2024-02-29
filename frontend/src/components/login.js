@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import base64 from "base-64";
 
 export const Login = () => {
   const [username, setUsername] = useState("");

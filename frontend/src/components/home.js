@@ -27,20 +27,25 @@ export const Home = () => {
           });
           const url = "http://localhost:8000" + data.id_document;
 
-          axios
-            .get(`${url}`, {
-              headers: {
-                Authorization: "Bearer " + localStorage.getItem("access_token"),
-              },
-              responseType: "arraybuffer",
-            })
-            .then((res) => {
-              let data = new Uint8Array(res.data);
-              let raw = String.fromCharCode.apply(null, data);
-              let base64 = btoa(raw);
-              let src = "data:image;base64," + base64;
-              setImg(src);
-            });
+          try {
+            axios
+              .get(`${url}`, {
+                headers: {
+                  Authorization:
+                    "Bearer " + localStorage.getItem("access_token"),
+                },
+                responseType: "arraybuffer",
+              })
+              .then((res) => {
+                let data = new Uint8Array(res.data);
+                let raw = String.fromCharCode.apply(null, data);
+                let base64 = btoa(raw);
+                let src = "data:image;base64," + base64;
+                setImg(src);
+              });
+          } catch (e) {
+            console.log(e);
+          }
 
           axios
             .get("http://localhost:8000/login-info", {
@@ -87,7 +92,7 @@ export const Home = () => {
       <div className={styles.row}>
         <div className={styles.column}>
           <p>
-            <img src={img} width="300px"></img>
+            <img src={img} alt="loading..." width="300px"></img>
           </p>
         </div>
         <div className={styles.column}>
