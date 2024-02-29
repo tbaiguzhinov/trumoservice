@@ -1,0 +1,23 @@
+.column {
+    float: left;
+    width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.green {
+    background-color: green;
+    color: white;
+    display: inline-block;
+}
+
+.red {
+    background-color: red;
+    color: white;
+    display: inline-block;
+}
