@@ -8,7 +8,6 @@ export const Home = () => {
   const [lastName, setLastName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [idNumber, setIdNumber] = useState("");
-  const [img, setImg] = useState();
   const [complete, setComplete] = useState("");
   const [infoStyle, setInfoStyle] = useState("");
   const [loginInfo, setLoginInfo] = useState([]);
@@ -25,29 +24,7 @@ export const Home = () => {
               Authorization: "Bearer " + localStorage.getItem("access_token"),
             },
           });
-          const url = "http://localhost:8000" + data.id_document;
-
-          try {
-            axios
-              .get(`${url}`, {
-                headers: {
-                  Authorization:
-                    "Bearer " + localStorage.getItem("access_token"),
-                },
-                responseType: "arraybuffer",
-              })
-              .then((res) => {
-                let data = new Uint8Array(res.data);
-                let raw = String.fromCharCode.apply(null, data);
-                let base64 = btoa(raw);
-                let src = "data:image;base64," + base64;
-                setImg(src);
-              });
-          } catch (e) {
-            console.log(e);
-          }
-
-          axios
+          await axios
             .get("http://localhost:8000/login-info", {
               headers: {
                 "Content-Type": "application/json",
@@ -56,10 +33,8 @@ export const Home = () => {
             })
             .then((res) => {
               setLoginInfo(res.data["logins"]);
-              console.log(res.data);
             });
 
-          setImg(url);
           setMessage(data.message);
           setFirstName(data.first_name);
           setLastName(data.last_name);
@@ -85,22 +60,18 @@ export const Home = () => {
     <div className="form-signin mt-5 text-center">
       <h3>Hello {message}!</h3>
       <br></br>
-      <h4>Form status</h4>
       <p className={infoStyle}>{complete}</p>
       <br></br>
       <h4>My data</h4>
       <div className={styles.row}>
         <div className={styles.column}>
-          <p>
-            <img src={img} alt="loading..." width="300px"></img>
-          </p>
-        </div>
-        <div className={styles.column}>
           <button className="btn btn-outline-primary active">
             <a href="/form" style={{ color: "white" }}>
-              Fill in the form
+              Change my data
             </a>
           </button>
+        </div>
+        <div className={styles.column}>
           <p>
             <b>First name:</b> {firstName}
           </p>

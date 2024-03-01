@@ -1,4 +1,9 @@
 from service.models import User
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-admin.site.register(User)
+
+class CustomUserAdmin(UserAdmin):
+    ...
+    
+admin.site.register(User, CustomUserAdmin)

@@ -6,9 +6,9 @@ from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework import permissions
 from django.http import HttpResponse
-from oauth2_provider.views import TokenView
-from oauth2_provider.models import AccessToken
+from oauth2_provider.models import AccessToken, RefreshToken
 from datetime import datetime
+import base64
 
 from dotenv import load_dotenv
 
@@ -23,8 +23,7 @@ class StartPage(APIView):
         if request.user.first_name and \
             request.user.last_name and \
             request.user.date_of_birth and \
-            request.user.identification_number and \
-            request.user.identification_file.name != 'undefined':
+            request.user.identification_number:
             form_complete = True
 
         return JsonResponse(
@@ -34,7 +33,6 @@ class StartPage(APIView):
                 'last_name': request.user.last_name,
                 'date_of_birth': request.user.date_of_birth,
                 'id_number': request.user.identification_number,
-                'id_document': request.user.identification_file.url,
                 'form_complete': form_complete
             },
             status=200
@@ -101,23 +99,6 @@ class Login(APIView):
         return response
 
 
-class IdentificationFiles(APIView):
-    queryset = User.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, name):
-        user = request.user
-        file_path = user.identification_file.path
-        if os.path.exists(file_path):
-            with open(file_path, 'rb') as file:
-                response = HttpResponse(file.read(), content_type='application/octet-stream')
-                response['Content-Disposition'] = 'attachment; filename=' + name
-                return response
-        print('File not found')
-        return JsonResponse({'message': 'File not found'}, status=404)
-
-
 class UpdateUser(APIView):
     queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -141,9 +122,6 @@ class UpdateUser(APIView):
         user.last_name = request.data.get('last_name', user.last_name)
         user.date_of_birth = request.data.get('date_of_birth', user.date_of_birth)
         user.identification_number = request.data.get('identification_number', user.identification_number)
-        file = request.data.get('identification_file')
-        if not file == 'undefined':
-            user.identification_file = file
         user.save()
         return JsonResponse({'message': 'User updated'}, status=200)
 
@@ -161,17 +139,25 @@ def revoke_token(token):
 
 
 def request_token(username, password):
-    print('requesting token')
-    response = requests.post(
-        'http://localhost:8000/o/token/',
-        data={
+    client_id = os.getenv('CLIENT_ID')
+    client_secret = os.getenv('CLIENT_SECRET')
+    data = {
             'username': username,
             'password': password,
             'grant_type': 'password',
-            'client_id': os.getenv('CLIENT_ID'),
-            'client_secret': os.getenv('CLIENT_SECRET')
+        }
+    client_info = base64.b64encode(f'{client_id}:{client_secret}'.encode('utf-8')).decode('utf-8')
+    response = requests.post(
+        'http://localhost:8000/o/token/',
+        data=data,
+        headers={
+            'Authorization': f'Basic {client_info}'
         }
     )
+    print(client_id)
+    print(client_secret)
+    print(client_info)
+    print(response.text)
     return JsonResponse(response.json(), status=response.status_code)
 
 
@@ -182,6 +168,8 @@ class Logout(APIView):
     def post(self, request):
         user = request.user
         revoke_token(request.data.get('token'))
+        AccessToken.objects.filter(user=user).delete()
+        RefreshToken.objects.filter(user=user).delete()
         Logging.objects.create(
             user=user,
             action='logout',
@@ -200,6 +188,7 @@ class LoginInfo(APIView):
             {
                 'logins': [
                     {
+                        'id': login.id,
                         'action': login.action,
                         'ip': login.ip,
                         'user_agent': login.user_agent,

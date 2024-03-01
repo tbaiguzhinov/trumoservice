@@ -39,7 +39,6 @@ export const Form = () => {
     form.append("last_name", lastName);
     form.append("date_of_birth", dateOfBirth);
     form.append("identification_number", idNumber);
-    form.append("identification_file", e.target.idDocument.files[0]);
     try {
       await axios.patch("http://localhost:8000/update", form, {
         headers: {
@@ -107,14 +106,6 @@ export const Form = () => {
               placeholder="Enter ID Number"
               value={idNumber}
               onChange={(e) => setIdNumber(e.target.value)}
-            />
-          </div>
-          <div className="form-group mt-3">
-            <label>Upload ID Document</label>
-            <input
-              name="idDocument"
-              type="file"
-              className="form-control mt-1"
             />
           </div>
           <div className="d-grid gap-2 mt-3">
