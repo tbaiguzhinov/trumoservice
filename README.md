@@ -1,9 +1,13 @@
 # Trumo test service
 
 This project is a service that provides authorization via OAuth2 and authentication using resulting token. Home page display user's KYC information, status of user's information (whether it is complete or not) and information about user's activity (logins, logouts, etc.).  
-Used stack: ReactJS 18.2.0, Django 4.1.13, MongoDB Atlas as database, Docker, Docker Compose, OAuth2.
+Stack: ReactJS 18.2.0, Django 4.1.13, MongoDB Atlas as database, Docker, Docker Compose, OAuth2.
 
-## Getting Started
+## Deploy
+
+Project is deployed at [http://13.40.77.83/](http://13.40.77.83/), using Dokcer inside a AWS EC2 instance.
+
+## Local installation
 
 To run this project, you will need to have Docker installed on your machine. Follow the steps below to get started:
 

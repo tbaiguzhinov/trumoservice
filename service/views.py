@@ -142,7 +142,7 @@ class UpdateUser(APIView):
 
 
 def revoke_token(token):
-    url = 'http://localhost:8000/o/revoke_token/',
+    url = 'http://localhost:8000/o/revoke_token/'
     response = requests.post(
         url,
         data={
