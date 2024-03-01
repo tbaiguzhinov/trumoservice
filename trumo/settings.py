@@ -25,12 +25,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', 'fnnsdf123123!@#!@#qweiqweHFASFHAF')
+
+OAUTH2_CLIENT_ID = os.getenv('CLIENT_ID', 'AgVRMJymLY6bQEdOUOUxibsR9a9MgChKdmKig3WF')
+OAUTH2_CLIENT_SECRET = os.getenv('CLIENT_SECRET', 'aPBsXWDWaeGlofZN3lbr7vUQufzssfK2TE8dKfmY0Xhxupw5wOojcgBtlvswU5qLtMyQ0faDz9J9DKSp3dtT9ye7zKUqVH1mcvcNyA14SVrSOjs9pdJCO6lB4jpeSbI4')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -85,10 +88,10 @@ WSGI_APPLICATION = 'trumo.wsgi.application'
 # # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 connection_string = 'mongodb+srv://{}:{}@trumocluster.byjjn3d.mongodb.net'.format(  # noqa E501
-    os.getenv('MONGO_USER_NAME'),
-    os.getenv('MONGO_USER_PASSWORD'),
+    os.getenv('MONGO_USER_NAME', ''),
+    os.getenv('MONGO_USER_PASSWORD', ''),
 )
-db_name = os.getenv('MONGO_DB_NAME')
+db_name = os.getenv('MONGO_DB_NAME', '')
 
 DATABASES = {
         'default': {

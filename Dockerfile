@@ -23,4 +23,4 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 ADD . /code
-COPY .env /code/.env
+COPY .env.example /code/.env

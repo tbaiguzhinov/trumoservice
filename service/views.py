@@ -1,18 +1,14 @@
-import os
 import pytz
 import requests
 from service.models import User, Logging
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework import permissions
-from django.http import HttpResponse
 from oauth2_provider.models import AccessToken, RefreshToken
 from datetime import datetime
 import base64
+from django.conf import settings
 
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class StartPage(APIView):
@@ -131,16 +127,16 @@ def revoke_token(token):
         'http://localhost:8000/o/revoke_token/',
         data={
             'token': token,
-            'client_id': os.getenv('CLIENT_ID'),
-            'client_secret': os.getenv('CLIENT_SECRET')
+            'client_id': settings.OAUTH2_CLIENT_ID,
+            'client_secret': settings.OAUTH2_CLIENT_SECRET
         }
     )
     return response
 
 
 def request_token(username, password):
-    client_id = os.getenv('CLIENT_ID')
-    client_secret = os.getenv('CLIENT_SECRET')
+    client_id = settings.OAUTH2_CLIENT_ID
+    client_secret = settings.OAUTH2_CLIENT_SECRET
     data = {
             'username': username,
             'password': password,
