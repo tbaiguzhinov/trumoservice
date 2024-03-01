@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
-from dotenv import load_dotenv
+from pathlib import Path
+
 import certifi
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -27,8 +28,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'fnnsdf123123!@#!@#qweiqweHFASFHAF')
 
-OAUTH2_CLIENT_ID = os.getenv('CLIENT_ID', 'AgVRMJymLY6bQEdOUOUxibsR9a9MgChKdmKig3WF')
-OAUTH2_CLIENT_SECRET = os.getenv('CLIENT_SECRET', 'aPBsXWDWaeGlofZN3lbr7vUQufzssfK2TE8dKfmY0Xhxupw5wOojcgBtlvswU5qLtMyQ0faDz9J9DKSp3dtT9ye7zKUqVH1mcvcNyA14SVrSOjs9pdJCO6lB4jpeSbI4')
+OAUTH2_CLIENT_ID = os.getenv(
+    'CLIENT_ID',
+    'AgVRMJymLY6bQEdOUOUxibsR9a9MgChKdmKig3WF'
+)
+OAUTH2_CLIENT_SECRET = os.getenv(
+    'CLIENT_SECRET',
+    'aPBsXWDWaeGlofZN3lbr7vUQufzssfK2TE8dKfmY0Xhxupw5wOojcgBtlvswU5qLtMyQ0faDz9J9DKSp3dtT9ye7zKUqVH1mcvcNyA14SVrSOjs9pdJCO6lB4jpeSbI4'  # noqa E501 
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'True'
@@ -99,9 +106,9 @@ DATABASES = {
             'NAME': 'trumoDB',
             'ENFORCE_SCHEMA': False,
             'CLIENT': {
-                'host': f'{connection_string}/{db_name}?retryWrites=true&w=majority',
+                'host': f'{connection_string}/{db_name}?retryWrites=true&w=majority',  # noqa E501
                 'tlsCAFile': certifi.where(),
-            }  
+            }
         }
 }
 
@@ -161,5 +168,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/admin/login/'
 
 OAUTH2_PROVIDER = {
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups'
+    }
 }

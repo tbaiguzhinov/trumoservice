@@ -1,8 +1,7 @@
-from django.urls import include, path
 from django.contrib import admin
+from django.urls import include, path
 
 from service import views
-
 
 urlpatterns = [
     path('', views.StartPage.as_view(), name='start'),

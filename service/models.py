@@ -1,7 +1,5 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-from django.contrib.auth.models import BaseUserManager
-from oauth2_provider.models import AccessToken
 
 
 class CustomUserManager(BaseUserManager):
@@ -39,7 +37,11 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=30, null=True, blank=True)
     last_name = models.CharField(max_length=30, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    identification_number = models.CharField(max_length=30, null=True, blank=True)
+    identification_number = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True
+    )
 
     objects = CustomUserManager()
 

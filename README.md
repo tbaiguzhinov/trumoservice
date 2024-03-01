@@ -17,8 +17,8 @@ Once the container is running, you can access the service by visiting `http://lo
 
 Credentials for test clients:
 
-1. Username: test1, password: 12345.
+1. Username: test1, password: 12345. Information complete.
 
-2. Username: test2, password: 234567.
+2. Username: test2, password: 234567. Information incomplete.
 
-3. Username: test3, password: 345678.
+3. Username: test3, password: 345678. Information complete.

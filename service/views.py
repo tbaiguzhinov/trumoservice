@@ -1,14 +1,15 @@
+import base64
+from datetime import datetime
+
 import pytz
 import requests
-from service.models import User, Logging
-from rest_framework.views import APIView
-from django.http import JsonResponse
-from rest_framework import permissions
-from oauth2_provider.models import AccessToken, RefreshToken
-from datetime import datetime
-import base64
 from django.conf import settings
+from django.http import JsonResponse
+from oauth2_provider.models import AccessToken, RefreshToken
+from rest_framework import permissions
+from rest_framework.views import APIView
 
+from service.models import Logging, User
 
 
 class StartPage(APIView):
@@ -17,9 +18,9 @@ class StartPage(APIView):
     def get(self, request):
         form_complete = False
         if request.user.first_name and \
-            request.user.last_name and \
-            request.user.date_of_birth and \
-            request.user.identification_number:
+                request.user.last_name and \
+                request.user.date_of_birth and \
+                request.user.identification_number:
             form_complete = True
 
         return JsonResponse(
@@ -103,21 +104,38 @@ class UpdateUser(APIView):
         user = request.user
         validation_errors = {}
         if not request.data.get('first_name').isalpha():
-            validation_errors['first_name'] = 'First name should contain only letters'
+            validation_errors[
+                'first_name'
+            ] = 'First name should contain only letters'
         if not request.data.get('last_name').isalpha():
-            validation_errors['last_name'] = 'Last name should contain only letters'
+            validation_errors[
+                'last_name'
+            ] = 'Last name should contain only letters'
         try:
-            datetime.strptime(request.data.get('date_of_birth'), '%Y-%m-%d')
+            datetime.strptime(
+                request.data.get('date_of_birth'),
+                '%Y-%m-%d'
+            )
         except ValueError:
-            validation_errors['date_of_birth'] = 'Date of birth should be in the format YYYY-MM-DD'
+            validation_errors[
+                'date_of_birth'
+            ] = 'Date of birth should be in the format YYYY-MM-DD'
         if not request.data.get('identification_number').isdigit():
-            validation_errors['identification_number'] = 'Identification number should contain only numbers'
+            validation_errors[
+                'identification_number'
+            ] = 'Identification number should contain only numbers'
         if validation_errors:
             return JsonResponse(validation_errors, status=400)
         user.first_name = request.data.get('first_name', user.first_name)
         user.last_name = request.data.get('last_name', user.last_name)
-        user.date_of_birth = request.data.get('date_of_birth', user.date_of_birth)
-        user.identification_number = request.data.get('identification_number', user.identification_number)
+        user.date_of_birth = request.data.get(
+            'date_of_birth',
+            user.date_of_birth
+        )
+        user.identification_number = request.data.get(
+            'identification_number',
+            user.identification_number
+        )
         user.save()
         return JsonResponse({'message': 'User updated'}, status=200)
 
@@ -142,7 +160,11 @@ def request_token(username, password):
             'password': password,
             'grant_type': 'password',
         }
-    client_info = base64.b64encode(f'{client_id}:{client_secret}'.encode('utf-8')).decode('utf-8')
+    AccessToken.objects.all().delete()
+    RefreshToken.objects.all().delete()
+    client_info = base64.b64encode(
+        f'{client_id}:{client_secret}'.encode('utf-8')
+    ).decode('utf-8')
     response = requests.post(
         'http://localhost:8000/o/token/',
         data=data,
@@ -150,10 +172,6 @@ def request_token(username, password):
             'Authorization': f'Basic {client_info}'
         }
     )
-    print(client_id)
-    print(client_secret)
-    print(client_info)
-    print(response.text)
     return JsonResponse(response.json(), status=response.status_code)
 
 
@@ -179,7 +197,9 @@ class LoginInfo(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        loggins = Logging.objects.filter(user=request.user).order_by('-date')[:5]
+        loggins = Logging.objects.filter(
+            user=request.user
+        ).order_by('-date')[:5]
         return JsonResponse(
             {
                 'logins': [
