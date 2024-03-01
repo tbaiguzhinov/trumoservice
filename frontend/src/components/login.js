@@ -14,7 +14,7 @@ export const Login = () => {
     };
     try {
       const { data } = await axios.post(
-        "http://localhost:8000/login/",
+        process.env.REACT_APP_BASE_URL + "/login/",
         user,
         {
           headers: {

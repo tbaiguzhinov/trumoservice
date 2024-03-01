@@ -14,7 +14,7 @@ export const Form = () => {
     } else {
       (async () => {
         try {
-          const { data } = await axios.get("http://localhost:8000/", {
+          const { data } = await axios.get(process.env.REACT_APP_BASE_URL, {
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + localStorage.getItem("access_token"),
@@ -40,7 +40,7 @@ export const Form = () => {
     form.append("date_of_birth", dateOfBirth);
     form.append("identification_number", idNumber);
     try {
-      await axios.patch("http://localhost:8000/update", form, {
+      await axios.patch(process.env.REACT_APP_BASE_URL + "/update", form, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + localStorage.getItem("access_token"),

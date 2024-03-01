@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from oauth2_provider.models import AccessToken, RefreshToken
 from rest_framework import permissions
 from rest_framework.views import APIView
+from rest_framework.reverse import reverse
 
 from service.models import Logging, User
 
@@ -141,8 +142,9 @@ class UpdateUser(APIView):
 
 
 def revoke_token(token):
+    url = reverse('oauth2_provider:revoke-token')
     response = requests.post(
-        'http://localhost:8000/o/revoke_token/',
+        url,
         data={
             'token': token,
             'client_id': settings.OAUTH2_CLIENT_ID,

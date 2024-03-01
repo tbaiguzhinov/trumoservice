@@ -24,3 +24,5 @@ EXPOSE 8000
 
 ADD . /code
 COPY .env.example /code/.env
+RUN python manage.py migrate
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "trumo.wsgi:application"]

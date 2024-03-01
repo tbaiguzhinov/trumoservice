@@ -18,14 +18,14 @@ export const Home = () => {
     } else {
       (async () => {
         try {
-          const { data } = await axios.get("http://localhost:8000/", {
+          const { data } = await axios.get(process.env.REACT_APP_BASE_URL, {
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + localStorage.getItem("access_token"),
             },
           });
           await axios
-            .get("http://localhost:8000/login-info", {
+            .get(process.env.REACT_APP_BASE_URL + "/login-info", {
               headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + localStorage.getItem("access_token"),
